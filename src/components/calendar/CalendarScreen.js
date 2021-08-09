@@ -9,17 +9,20 @@ import { messages } from '../../helpers/calendar-messages-es';
 import { CalendarEvent } from './CalendarEvent';
 import { CalendarModal } from './CalendarModal';
 import { uiOpenModal } from '../../actions/ui';
-import { eventClearActiveEvent, eventSetActive } from '../../actions/events';
+import { eventClearActiveEvent, eventSetActive, eventStartLoading } from '../../actions/events';
 import { AddNewFab } from '../ui/AddNewFab';
 
 
 // Importaciones de moment para pasar la configuración del idioma a español
 import 'moment/locale/es';
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { DeleteEventFab } from '../ui/DeleteEventFab';
+import { useEffect } from 'react';
+
+
 // Le decimos a moment el idioma a utilizar
 moment.locale('es');
-
 
 // constante copiada de la documentación de big calendar, pero haciendo desestructuración de la importación del package
 const localizer = momentLocalizer(moment); // or globalizeLocalizer
@@ -39,17 +42,28 @@ const localizer = momentLocalizer(moment); // or globalizeLocalizer
 // }];
 
 export const CalendarScreen = () => {
-
-    // hacemos un useState para controlar la vista en la que nos encontramos
-    // Si no hay nada en el localStorage, le decimos que tome 'month' como defecto
-    const [lastView, setlastView] = useState( localStorage.getItem('lastView')) || 'month'
-
+    
     // Declaramos la variable dispatch para lanzar las acciones al store
     const dispatch = useDispatch();
 
+    // hacemos un useState para controlar la vista en la que nos encontramos
+    // Si no hay nada en el localStorage, le decimos que tome 'month' como defecto
+    const [lastView, setlastView] = useState( localStorage.getItem('lastView') || 'month' );
+
     // Obtenemos del store todos los eventos que tenemos
     // Obtenemos el activeEvent
-    const { events, activeEvent } = useSelector(state => state.calendar)
+    const { events, activeEvent } = useSelector(state => state.calendar);
+
+    // Obtenemos la información del usuario del store
+    const { uid } = useSelector( state => state.auth );
+
+    // Utilizamos el useEffect para ver cuando se carga el calendario y solicitar los eventos a la dB
+    useEffect(() => {
+        
+        // Hacemos el dispatch de la carga de los eventos
+        dispatch( eventStartLoading() );
+        
+    }, [ dispatch ]);
 
     // Función que se lanzará cuando se haga doble click sobre un evento
     const onDoubleClick = (e) => {
@@ -94,7 +108,7 @@ export const CalendarScreen = () => {
 
         // Creamos una variable con un estilo del tipo css
         const style = {
-            backgroundColor: '#367CF7',
+            backgroundColor: ( uid === event.user._id ) ? '#367CF7' : '#455660',
             borderRadius: '5px',
             opacity: 0.8,
             display: 'block',

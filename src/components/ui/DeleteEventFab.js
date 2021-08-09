@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 
 
-import { eventDelete } from '../../actions/events';
+import { eventStartDelete } from '../../actions/events';
 
 
 export const DeleteEventFab = () => {
@@ -14,7 +14,7 @@ export const DeleteEventFab = () => {
     const handleFAB = () =>{
 
         // Hacemos el dispatch de la acción de borrado del evento
-        dispatch( eventDelete() );
+        dispatch( eventStartDelete() );
     }
 
     return (

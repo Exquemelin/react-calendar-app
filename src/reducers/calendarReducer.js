@@ -1,24 +1,26 @@
-import moment from 'moment'
+// import moment from 'moment'
 
 
 import { types } from '../types/types';
+
+// Este es el evento tipo. Es solo para información de como tiene que ser
+// {
+//     id: 'asdfasdfasdfasd''
+//     title: 'Cumpleaños del jefe',
+//     start: moment().toDate(), // new Date() obtenemos la fecha actual
+//     end: moment().add(2, 'hours').toDate(),
+//     notes: 'Comprar el pastel',
+//     user: {
+//         _id: '1234',
+//         name: 'Iván',
+//     }
+// }
 
 
 // Creamos un initalState con un array que serán los eventos, y un objeto que será el evento activo
 const initialState = {
 
-    events: [{
-            id: new Date().getTime(),
-            title: 'Cumpleaños del jefe',
-            start: moment().toDate(), // new Date() obtenemos la fecha actual
-            end: moment().add(2, 'hours').toDate(),
-            bgcolor: '#fafafa',
-            notes: 'Comprar el pastel',
-            user: {
-                _id: '1234',
-                name: 'Iván',
-            }
-    }],
+    events: [],
     activeEvent: null,
 
 
@@ -81,6 +83,23 @@ export const calendarReducer = ( state = initialState, action ) =>{
                     // Filtramos el array devolviendo aquellos eventos que su id no coincide con el activo
                     e => ( e.id !== state.activeEvent.id )
                 ),
+                activeEvent: null,
+            }
+
+        case types.eventLoaded:
+
+            // Cargamos los eventos en el store
+            return {
+                ...state,
+                events: [ ...action.payload ]
+            }
+
+        case types.eventLogout:
+
+            // Vaciamos los eventos del store cuando se haga logout
+            return {
+                ...state,
+                events: [],
                 activeEvent: null,
             }
     

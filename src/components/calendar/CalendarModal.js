@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 import { uiCloseModal } from '../../actions/ui';
-import { eventAddNew, eventClearActiveEvent, eventUpdated } from '../../actions/events';
+import { eventAddNew, eventClearActiveEvent, eventStartAddNew, eventStartUpdate, eventUpdated } from '../../actions/events';
 
 
 // Copiado de la web npm del package
@@ -141,6 +141,8 @@ export const CalendarModal = () => {
         // Prevenimos la propagación del formulario
         e.preventDefault();
 
+        console.log( formValues );
+
         // Transformarmos la fecha de inicio y fin en formato moment para hacer la validación
         const momentStart = moment( start );
         const momentEnd = moment( end );
@@ -164,21 +166,24 @@ export const CalendarModal = () => {
         if ( activeEvent ) {
 
             // Hacemos el dispatch para actualizar el evento en el store
-            dispatch( eventUpdated( formValues ))
+            dispatch( eventStartUpdate( formValues ));
             
         } else {
 
             //TODO: realizar grabación en DB
             // Hacemos el dispatch para añadir el nuevo evento al store
             // Usamos el operador spread para extraer todos los datos y poder añadir un id
-            dispatch( eventAddNew({
-                ...formValues,
-                id: new Date().getTime(),
-                user: {
-                    _id: '123',
-                    name: 'Iván'
-                }
-            }) )
+            // dispatch( eventAddNew({
+            //     ...formValues,
+            //     id: new Date().getTime(),
+            //     user: {
+            //         _id: '123',
+            //         name: 'Iván'
+            //     }
+            // }) )
+            
+            // Ahora la grabación la haremos haciendo el dispatch de una acción de inicio de grabación
+            dispatch( eventStartAddNew( formValues ));
 
         }
 
