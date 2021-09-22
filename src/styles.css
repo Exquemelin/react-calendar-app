@@ -80,3 +80,40 @@ html, body {
     position: fixed;
     left: 25px;
 }
+
+.pyd-screen {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    /* height: 100vh; */
+}
+
+.pyd-button {
+    margin: 20px;
+    width: 400px;
+}
+
+.ok-button {
+    margin: 20px;
+    width: 100px;
+    background-color: green;
+    color: white;
+}
+
+.kao-button {
+    margin: 20px;
+    width: 100px;
+    background-color: red;
+    color: white;
+}
+
+.na-button {
+    margin: 20px;
+    width: 100px;
+    background-color: lightblue;
+    color: white;
+}
+
+.pyd-serials-list {
+    margin-inline: 10px;
+}

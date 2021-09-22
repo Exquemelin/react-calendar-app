@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 
 // Desestructuramos las props que tenemos que pasar
-// ...rest es el resgo de propiedades como el exact, el to, etc del Route que necesitamos
+// ...rest es el resto de propiedades como el exact, el to, etc del Route que necesitamos
 export const PrivateRoute = ({
     isLoggedIn,
     component: Component,

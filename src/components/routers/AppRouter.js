@@ -11,11 +11,19 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
   
   
-import { LoginScreen } from '../auth/LoginScreen';
-import { CalendarScreen } from '../calendar/CalendarScreen';
 import { startChecking } from '../../actions/auth';
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
+
+
+import { CalendarScreen } from '../calendar/CalendarScreen';
+import { LoginScreen } from '../auth/LoginScreen';
+import { PYDScreen } from '../pyd/PydScreen';
+import { PanelScreen } from '../pyd/panels/PanelScreen';
+import { TestScreen } from '../pyd/tests/TestScreen';
+import { PointsScreen } from '../pyd/tests/PointsScreen';
+import { FatScreen } from '../pyd/tests/FatScreen';
+import { FatInspectionScreen } from '../pyd/tests/FatInspectionScreen';
 
 
 export const AppRouter = () => {
@@ -57,6 +65,48 @@ export const AppRouter = () => {
                         path="/" 
                         component={ CalendarScreen } 
                         isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact 
+                        path="/pyd" 
+                        component={ PYDScreen } 
+                        isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact 
+                        path="/serials" 
+                        component={ PanelScreen } 
+                        isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact 
+                        path="/tests" 
+                        component={ TestScreen } 
+                        isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact 
+                        path="/tests/points" 
+                        component={ PointsScreen } 
+                        isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact 
+                        path="/tests/fat" 
+                        component={ FatScreen } 
+                        isLoggedIn={ !!uid }  // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/fat/inspection"
+                        component={ FatInspectionScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
                     />
 
                     <Redirect to="/login" />
