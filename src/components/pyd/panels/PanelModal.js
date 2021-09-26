@@ -45,6 +45,7 @@ const initEvent = {
     units: "",
     project: "",
     client: "",
+    status: "pending",
     timestamp: "dkslfajsdlfdfkjasdf"
 }
 

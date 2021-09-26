@@ -24,6 +24,7 @@ import { TestScreen } from '../pyd/tests/TestScreen';
 import { PointsScreen } from '../pyd/tests/PointsScreen';
 import { FatScreen } from '../pyd/tests/FatScreen';
 import { FatInspectionScreen } from '../pyd/tests/FatInspectionScreen';
+import { FatReviewScreen } from '../pyd/tests/FatReviewScreen';
 
 
 export const AppRouter = () => {
@@ -106,6 +107,13 @@ export const AppRouter = () => {
                         exact
                         path="/tests/fat/inspection"
                         component={ FatInspectionScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/fat/review"
+                        component={ FatReviewScreen }
                         isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
                     />
 

@@ -9,7 +9,7 @@ import { FatPointList } from './FatPointList';
 import { fatClean, fatFinish, fatPointsLoad, fatStartNew } from '../../../actions/fat';
 
 
-export const FatInspectionScreen = () => {
+export const FatReviewScreen = () => {
 
     // Declaramos la variable dispatch para lanzar las acciones al store
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ export const FatInspectionScreen = () => {
     const history = useHistory();
 
     // Obtenemos del store los fat points, el panel y si está arrancando
-    const { points, panel, starting, checked, ready } = useSelector(state => state.fat);
+    const { points, panel, starting, checked } = useSelector(state => state.fat);
 
     // Utilizamos el useEffect para ver cuando se carga la página y solicitar los cuadros a la DB
     useEffect(() => {
@@ -47,7 +47,7 @@ export const FatInspectionScreen = () => {
     const handleFinish = () => {
 
         // Hacemos el dispatch de la función que va a actualizar el panel en la DB
-        dispatch( fatFinish( panel, ready ) );
+        dispatch( fatFinish( panel ) );
 
         // Hacemos el dispatch de la action que borrará los datos del store fat
         dispatch( fatClean() );
@@ -65,12 +65,14 @@ export const FatInspectionScreen = () => {
             <Navbar />
 
             <h1> Página de Pruebas </h1>
+            <h2> Revisión de Defectos </h2>
             <h2> Número de Serie: { panel.serial }</h2>
 
             {
                 ( !starting ) // Si no está arrancando presentamos el listado de puntos
-                    ? ( <FatPointList 
-                            filter={ false }
+                    ? ( 
+                        <FatPointList 
+                            filter={ true }
                         /> 
                     )
                     : ( <div><span>Cargando Datos</span></div> )

@@ -48,6 +48,7 @@ export const types = {
     fatClean: '[fat] Clean FAT',
     fatSetActive: '[fat] Set Active Panel',
     fatLoadPoints: '[fat] Load Points',
+    fatAddPoint: '[fat] Add Point',
     fatUpdatePoint: '[fat] Update Point',
     fatPanelChecked: '[fat] Panel Checked',
 

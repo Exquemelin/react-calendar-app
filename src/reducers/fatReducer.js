@@ -6,6 +6,7 @@ import { types } from "../types/types";
 const initialState = {
     starting: true, // Variable para establecer que se está haciendo la consulta en la DB
     checked: false, // Variable para establecer cuando a un cuadro se le hicieron todas las pruebas
+    ready: false, // Variable para establecer cuando un cuadro está listo
     panel: {},
     points: []
 }
@@ -43,7 +44,17 @@ export const fatReducer = ( state = initialState, action ) => {
 
             return {
                 ...state,
-                points: action.payload
+                points: action.payload,
+            }
+
+        case types.fatAddPoint:
+
+            return {
+                ...state,
+                points: [
+                    ...state.points,
+                    action.payload,
+                ],
             }
 
         case types.fatUpdatePoint:
@@ -60,7 +71,8 @@ export const fatReducer = ( state = initialState, action ) => {
 
             return {
                 ...state,
-                checked: true,
+                checked: action.payload.checked,
+                ready: action.payload.ready,
             }
         
         default:

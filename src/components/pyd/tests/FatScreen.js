@@ -17,11 +17,26 @@ export const FatScreen = () => {
     // Obtenemos del store todos los cuadros que tenemos
     const { panels } = useSelector(state => state.panel);
 
+    // Obtenemos del store el cuadro seleccionado
+    const { panel } = useSelector( state => state.fat );
+
     // Definimos la función que lanzaremos cuando se pulse el botón de iniciar las pruebas
     const handleStart = () => {
 
-        // Cambiamos de página
-        history.replace('/tests/fat/inspection');
+        // En función del estado del panel iremos a una página u otra
+        if ( panel.status === 'tested' || panel.status === 'reviewing' ) {
+
+            // Si ya está probado, o se está revisando, nos vamos a la página de revisión
+            // Cambiamos de página
+            history.replace('/tests/fat/review');
+
+        } else {
+            
+            // Si aún no se empezó a probar, o se está probando, nos vamos a la página de pruebas
+            // Cambiamos de página
+            history.replace('/tests/fat/inspection');         
+            
+        }
 
     };
     

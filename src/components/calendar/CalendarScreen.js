@@ -54,6 +54,8 @@ export const CalendarScreen = () => {
     // Obtenemos el activeEvent
     const { events, activeEvent } = useSelector(state => state.calendar);
 
+    console.log( events );
+
     // Obtenemos la información del usuario del store
     const { uid } = useSelector( state => state.auth );
 
@@ -62,6 +64,8 @@ export const CalendarScreen = () => {
         
         // Hacemos el dispatch de la carga de los eventos
         dispatch( eventStartLoading() );
+
+        console.log('object')
         
     }, [ dispatch ]);
 
