@@ -38,7 +38,7 @@ export const PointsScreen = () => {
             {
                 ( points.length > 0 )
                     ? ( <PointList /> )
-                    : ( <div></div> )
+                    : ( <div><h2>Aún no se ha creado ningún punto de inspección</h2></div> )
             }
 
             <AddPointFab />

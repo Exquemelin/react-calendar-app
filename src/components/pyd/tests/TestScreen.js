@@ -36,6 +36,28 @@ export const TestScreen = () => {
         
     }
 
+    // Definimos la función que lanzaremos cuando se pulse el botón de pruebas FAT
+    const handleReport = () => {
+
+        // Limpiamos el store fat por si no lo estuviese ya
+        dispatch( fatClean() );
+    
+        // Cambiamos de página
+        history.push('/tests/report');
+        
+    }
+
+    // Definimos la función que lanzaremos cuando se pulse el botón de pruebas FAT
+    const handleCertificate = () => {
+
+        // Limpiamos el store fat por si no lo estuviese ya
+        dispatch( fatClean() );
+    
+        // Cambiamos de página
+        history.push('/tests/certificate');
+        
+    }
+
     return (
 
         <div>
@@ -55,6 +77,20 @@ export const TestScreen = () => {
                     onClick={ handleFat }
                 >
                     <h3>Comenzar Prueba</h3>
+                </button>
+
+                <button 
+                    className="btn btn-primary pyd-button"
+                    onClick={ handleReport }
+                >
+                    <h3>Informe de Pruebas</h3>
+                </button>
+
+                <button 
+                    className="btn btn-primary pyd-button"
+                    onClick={ handleCertificate }
+                >
+                    <h3>Certificado de Pruebas</h3>
                 </button>
 
             </div>

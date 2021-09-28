@@ -4,13 +4,11 @@ import { useHistory } from 'react-router';
 
 
 import { Navbar } from '../../ui/Navbar';
-import { FatPointList } from './FatPointList';
-
-import { fatClean, fatFinish, fatPointsLoad, fatStartNew, fatStartRev } from '../../../actions/fat';
-import { FatReviewPointList } from './FatReviewPointList';
+import { fatClean, fatFinish, fatPointsLoad, fatStartNew, fatStartRev, startReport } from '../../../actions/fat';
+import { ReportPointList } from './ReportPointList';
 
 
-export const FatReviewScreen = () => {
+export const ReportScreen = () => {
 
     // Declaramos la variable dispatch para lanzar las acciones al store
     const dispatch = useDispatch();
@@ -27,12 +25,8 @@ export const FatReviewScreen = () => {
         // Hacemos el dispatch de la carga de los cuadros si tenemos un cuadro seleccionado
         if ( panel.id != undefined ) {
             
-            // Hacemos el dispatch de la creación y carga de unas nuevas pruebas FAT
-            dispatch( fatStartRev( panel ) );
-
-            // console.log( "Los puntos son " + points );
-
-            // console.log( points );
+            // Hacemos el dispatch de una función que carga las pruebas KAO en el store fat
+            dispatch( startReport( panel ) );
             
         } else { // En caso contrario nos vamos a la pantalla de inicio de pruebas
             
@@ -69,15 +63,13 @@ export const FatReviewScreen = () => {
             <Navbar />
 
             <h1> Página de Pruebas </h1>
-            <h2> Revisión de Defectos </h2>
+            <h2> Informe de Defectos </h2>
             <h2> Número de Serie: { panel.serial }</h2>
 
             {
                 ( !starting ) // Si no está arrancando presentamos el listado de puntos
                     ? ( 
-                        <FatReviewPointList 
-                            filter={ true }
-                        /> 
+                        <ReportPointList /> 
                     )
                     : ( <div><span>Cargando Datos</span></div> )
             }

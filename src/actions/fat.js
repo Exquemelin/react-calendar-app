@@ -213,7 +213,7 @@ const fatCheck = ( points ) => {
             : ( "" ),
 
         // Si hay alguno que esté KAO se pasa la variable a false
-        ( pt.status === "KAO")
+        ( pt.result === "KAO")
             ? ( ready = false )
             : ( "" )
 
@@ -297,7 +297,7 @@ export const fatClean = () => ({
     type: types.fatClean,
 });
 
-// Función que iniciará la carba de todos los puntos de inspección con status KAO
+// Función que iniciará la carga de todos los puntos de inspección con status KAO
 export const fatStartRev = ( panel ) => {
 
     return async ( dispatch, getState )  => {
@@ -331,10 +331,24 @@ export const fatStartRev = ( panel ) => {
                 if ( bodyFat.ok ) {
 
                     // Almacenamos en una variable todos los fat points
-                    const fatPoints = bodyFat.points;
+                    const fatPoints = bodyFat.fat;
+
+                    // Hacemos la comprobación del estado de los fat points
+                    const { checked, ready } = await fatCheck( fatPoints );
+
+                    // Si están todos probados lo marcaremos en el store
+                    if ( checked ) {
+
+                        // Hacemos el dispatch de la acción que pondrá el checked a true
+                        dispatch( panelChecked( checked, ready ) );
+
+                    }
 
                     // Hacemos el dispatch para meter los puntos en el store
-                    dispatch( pointsLoad( points ) );
+                    dispatch( pointsLoad( fatPoints ) );
+
+                    // Hacemos el dispatch para indicar que se terminó la carga de datos
+                    dispatch( fatStarted() );
                     
                 } else {
 
@@ -358,3 +372,59 @@ export const fatStartRev = ( panel ) => {
 
 };
 
+// Función que iniciará la carga de todos los puntos de inspección con status KAO
+export const startReport = ( panel ) => {
+
+    return async ( dispatch, getState ) => {
+
+        // Usamos una función try-catch porque vamos a hacer solicitudes a la DB
+        try {
+
+            // Hacemos una peticion para obtner los points de la base de datos y almacenamos la respuesta en una variable
+            const respPoints = await fetchConToken( 'points' );
+            const bodyPoints = await respPoints.json();
+
+            // Si la información llegó correctamente pasamos a cargar los fat points en el store
+            if ( bodyPoints.ok ) {
+
+                // Hacemos el dispatch para meter los points en su store y tener la información a mano
+                dispatch( pointLoading( bodyPoints.points ) );
+
+                // Hacemos la petición para obtener los fat points del cuadro
+                const respFat = await fetchConToken( `tests/panel/${ panel.id }` );
+                const bodyFat = await respFat.json();
+
+                // Si todo salió bien hacemos el dispatch de los fat points hacia su store
+                if ( bodyFat.ok ) {
+
+                    // Almacenamos en una variable aquellos fat points que tengan el resultado KAO
+                    const fatPoints = bodyFat.fat.filter( (pt) => {
+                        return pt.result === "KAO"
+                    });
+
+                    // Hacemos el dispatch para meter los fat points a su store
+                    dispatch( pointsLoad( fatPoints ) );
+
+                    // Hacemos el dispatch para indicar que terminó la carga de los fat points
+                    dispatch( fatStarted() );
+
+                } else {
+
+                    // Si no fue bien la carga de fat points lanzamos un mensaje
+                    console.log('No se han recuperado los fat points de la DB');
+                }
+
+            } else {
+
+                // Si no fue bien la carga de los points lanzamos un mensaje
+                console.log('No se han podido recuperar los points de la DB');
+                
+            }
+            
+        } catch (error) {
+            console.log( error );
+        }
+
+    }
+
+}

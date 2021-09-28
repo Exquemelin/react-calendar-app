@@ -25,6 +25,10 @@ import { PointsScreen } from '../pyd/tests/PointsScreen';
 import { FatScreen } from '../pyd/tests/FatScreen';
 import { FatInspectionScreen } from '../pyd/tests/FatInspectionScreen';
 import { FatReviewScreen } from '../pyd/tests/FatReviewScreen';
+import { ReportPanelScreen } from '../pyd/tests/ReportPanelScreen';
+import { ReportScreen } from '../pyd/tests/ReportScreen';
+import { CertificatePanelScreen } from '../pyd/tests/CertificatePanelScreen';
+import { CertificateScreen } from '../pyd/tests/CertificateScreen';
 
 
 export const AppRouter = () => {
@@ -114,6 +118,34 @@ export const AppRouter = () => {
                         exact
                         path="/tests/fat/review"
                         component={ FatReviewScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/report"
+                        component={ ReportPanelScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/report/show"
+                        component={ ReportScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/certificate"
+                        component={ CertificatePanelScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/tests/certificate/show"
+                        component={ CertificateScreen }
                         isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
                     />
 
