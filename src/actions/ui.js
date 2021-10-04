@@ -18,3 +18,9 @@ export const uiOpenPointModal = () => ({ type: types.uiOpenPointModal });
 
 // Action para cerrar el modal de los points
 export const uiClosePointModal = () => ({ type: types.uiClosePointModal });
+
+// Action para abrir el modal de los fat points
+export const uiOpenFatPointModal = () => ({ type: types.uiOpenFatPointModal });
+
+// Action para cerrar el modal de los fat point
+export const uiCloseFatPointModal = () => ({ type: types.uiCloseFatPointModal });

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 
 
 import { Navbar } from '../../ui/Navbar';
-import { fatClean, fatFinish, fatPointsLoad, fatStartNew, fatStartRev, startReport } from '../../../actions/fat';
+import { createReport, fatClean, fatFinish, fatPointsLoad, fatStartNew, fatStartRev, startReport } from '../../../actions/fat';
 import { ReportPointList } from './ReportPointList';
 
 
@@ -39,10 +39,21 @@ export const ReportScreen = () => {
         
     }, [ dispatch ]);
 
-    const handleFinish = () => {
+    // Función para el botón de imprimir informe
+    const handleReport = async () => {
+
+        // Metemos en una variable los puntos que están KAO
+        const reportPoints = points.filter( (pt) => {
+            return pt.result === 'KAO'
+        });
 
         // Hacemos el dispatch de la función que va a actualizar el panel en la DB
-        dispatch( fatFinish( panel, ready ) );
+        dispatch( createReport( panel, reportPoints ) );
+
+    }
+
+    // Función para el botón de cerrar el informe
+    const handleClose = () => {
 
         // Hacemos el dispatch de la action que borrará los datos del store fat
         dispatch( fatClean() );
@@ -75,17 +86,23 @@ export const ReportScreen = () => {
             }
 
             {
+                
+                <button 
+                    className="btn btn-primary pyd-button"
+                    onClick={ handleReport }
+                >
+                    <h3>Imprimir Informe</h3>
+                </button>
 
-                ( ready )
-                    ? ( 
-                        <button 
-                            className="btn btn-primary pyd-button"
-                            onClick={ handleFinish }
-                        >
-                            <h3>Finalizar Prueba</h3>
-                        </button>
-                    )
-                    : ( <div></div> )
+            }
+            {
+
+                <button 
+                    className="btn btn-primary pyd-button"
+                    onClick={ handleClose }
+                >
+                    <h3>Cerrar Informe</h3>
+                </button>
 
             }
 

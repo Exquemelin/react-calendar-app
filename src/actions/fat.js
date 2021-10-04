@@ -2,6 +2,7 @@ import { fetchConToken } from "../helpers/fetch";
 import { types } from "../types/types";
 import { panelStartAddNew } from "./panels";
 import { pointLoading } from "./points";
+import { uiCloseFatPointModal } from "./ui";
 
 
 // Action para cargar los datos del cuadro en el store fat
@@ -194,6 +195,22 @@ export const fatPointUpdate = ( point, index ) => {
     }
 
 };
+
+// Action para borrar el fat point activo
+export const clearActiveFatPoint = () => ({
+    type: types.fatClearActivePoint,
+});
+
+// Action para activar un fat point
+export const setActiveFatPoint = ( point, index ) => ({
+    type: types.fatSetActivePoint,
+    payload: {
+        point,
+        index,
+    }
+});
+
+
 
 // Función para comprobar si un cuadro ya se terminó de probar
 const fatCheck = ( points ) => {
@@ -428,3 +445,265 @@ export const startReport = ( panel ) => {
     }
 
 }
+
+// Action para añadir las categorias y los steps al store
+const loadCategories = ( categories, steps ) => ({
+    type: types.fatLoadCategories,
+    payload: {
+        categories,
+        steps,
+    }
+});
+
+// Función que iniciará la carga de todos los puntos de inspección de un cuadro que sean de aplicación
+export const startCertificate = ( panel ) => {
+
+    return async ( dispatch, getState) => {
+
+        // Usamos una función try-catch porque vamos a hacer solicitudes a la DB
+        try {
+
+            // Hacemos una petición para obtener los points de la DB y almacenarlos en su store
+            const respPoints = await fetchConToken( 'points' );
+            const bodyPoints = await respPoints.json();
+
+            // Si la información llegó correctamente pasamos a cargar los fat points
+            if ( bodyPoints.ok ) {
+
+                // Hacemos el dispatch para meter los points en su store
+                dispatch( pointLoading( bodyPoints.points ) );
+
+                // Hacemos la petición para obtener los fat points del cuadro
+                const respFat = await fetchConToken( `tests/panel/${ panel.id }` );
+                const bodyFat = await respFat.json();
+
+                // Si todo salió bien hacemos el dispath de los fat points hacia su store
+                if ( bodyFat.ok ) {
+
+                    // Almacenamos en una variable aquellos fat points que sean de aplicación
+                    const fatPoints = bodyFat.fat.filter( (pt) => {
+                        return ( pt.result === "OK" || pt.result === "KAO" )
+                    });
+
+                    // Enviamos los points y los fatPoints a una función que nos devolverá las categorías y su estado
+                    const data = await getSteps( bodyPoints.points, fatPoints );
+                    
+                    // Hacemos el dispatch para meter los fat points a su store
+                    dispatch( pointsLoad( fatPoints ) );
+                    
+                    // Hacemos el dispatch para meter las categorías al store
+                    dispatch( loadCategories( data.categories, data.steps ));
+                    
+                    // Hacemos el dispatch para indicar que terminó la carga de los fat points
+                    dispatch( fatStarted() );
+
+                } else {
+
+                    // Si no fue bien la carga de fat points lanzamos un mensaje
+                    console.log('No se han recuperado los fat points de la DB');
+
+                }
+
+            } else {
+
+                // Si no fue bien la carga de los points lanzamos un mensaje
+                console.log('No se han podido recuperar los points de la DB');
+
+            }
+            
+        } catch (error) {
+            console.log( error );
+        }
+
+    }
+    
+}
+
+// Función para obtener los steps y las categories de los fat points
+const getSteps = async ( points, fatPoints ) => {
+
+    // Declaramos dos variables para ir almacenando la información
+    let steps = [];
+    let categories = [];
+
+    // Modificamos los fat points para añadirles la categoría y el step
+    const newFatPoints = await fatPoints.map( (pt) => {
+
+        // Desestructuramos el punto creando una nueva variable para poder modificarlo
+        // y meterle más información
+        const { ...point } = pt;
+
+        // Buscamos la información de su point correspondiente y la tenemos a mano
+        const data = points.filter( (dt) => {
+            return dt.id === pt.pointId
+        });
+
+        // Devolvemos el fat point pero añadiéndole la categoría y el paso al que pertenece
+        return {
+            ...point,
+            step: data[0].step,
+            category: data[0].category,
+        }
+
+    })
+
+    // Hacemos un map de los points para ir sacando steps y categories únicos
+    await newFatPoints.map( pt => {
+
+        // Almacenamos en una variable la categoría del punto
+        const step = pt.step;
+
+        // Si la categoría no está incluída en el array de categorías la añadimos
+        if ( !steps.includes( step ) ) {
+            steps.push( step );
+        }
+
+        // Almacenamos en una variable el step del punto
+        const category = pt.category
+
+        // Si el step no está incluído en el array de steps lo añadimos
+        if ( !categories.includes( category) ){
+            categories.push( category );
+        }
+
+    });
+
+    categories = await checkCategories( categories, newFatPoints);
+
+    return {
+        steps,
+        categories,
+    }
+
+    console.log(`=====STEPS=====`);
+    console.log(steps);
+    console.log(`=====CATEGORIES=====`);
+    console.log(categories);
+    
+
+}
+
+// Declaramos una función para comprobar si las categorías ya están listas o no
+const checkCategories = ( categories, points ) => {
+
+    // Declaramos una variable que va a ser un array de objetos
+    let results = [];
+
+    // Hacemos un map de las categorías para introducirlas en el array objetivo
+    categories.map( async (cat) => {
+
+        // Hacemos una comprobación de cada categoría para ver si está OK
+        const ok = await checkPoints( points.filter( (pt) => {
+            return pt.category === cat
+        }));
+
+        // Devolvemos el resultado de la categoría
+        results.push({ category: cat, result: ok });
+
+    })
+
+    // Devolvemos el array results
+    return results;
+
+}
+
+// Declaramos una función para comprobar si todos los puntos están OK
+const checkPoints = ( points ) => {
+
+    // Declaramos una variable en true que cambiaremos en cuanto un solo point esté KAO
+    let ok = true;
+
+    // Hacemos un map de los puntos
+    points.map( (pt) => (
+
+        // Si el punto está KAO pasamos el ok a false
+        ( pt.result === "KAO" )
+            ? ( ok = false )
+            : ("")
+
+    ));
+
+    // Devolvemos el ok
+    return ok;
+
+}
+
+// Funcion para crear el certificado en pdf
+export const createReport = ( panel, points ) => {
+
+    return async ( dispatch ) => {
+
+        // Al lanzar una petición al backend lo hacemos con un try-catch
+        try {
+            
+            // Creamos una variable con los datos que vamos a enviar en la petición
+            const data = {
+                panel,
+                points
+            }
+            
+            // Hacemos la llamada al backend para hacer el report en pdf
+            const resp = await fetchConToken( `reports/report`, data, 'POST' );
+            // Y decodificamos la respuesta para su descarga
+            const hajk = await resp.blob().then( blob => download(blob) );
+
+            // En función de la respuesta que nos llegue devolvemos el valor true o false
+            if ( resp.status === 200 ) {
+                return true
+            } else {
+                return false
+            }
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+    };
+
+}
+
+// Funcion para crear el certificado en pdf
+export const createCertificate = async ( panel, categories ) => {
+
+    // Al lanzar una petición al backend lo hacemos con un try-catch
+    try {
+            
+        // Creamos una variable con los datos que vamos a enviar en la petición
+        const data = {
+            panel,
+            categories
+        }
+        
+        // Hacemos la llamada al backend para hacer el certificate en pdf
+        const resp = await fetchConToken( `reports/certificate`, data, 'POST' );
+        // Y decodificamos la respuesta para su descarga
+        const hajk = await resp.blob().then( blob => download(blob) );
+
+        // En función de la respuesta que nos llegue devolvemos el valor true o false
+        if ( resp.status === 200 ) {
+            return true
+        } else {
+            return false
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+// Función copiada de la red para descargar el archivo
+function download(blob, filename) {
+
+    console.log("DOWNLOAD")
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    // the filename you want
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }

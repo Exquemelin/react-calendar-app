@@ -1,6 +1,10 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { fatPointUpdate } from '../../../actions/fat';
+import Swal from 'sweetalert2';
+
+
+import { fatPointUpdate, setActiveFatPoint } from '../../../actions/fat';
+import { uiOpenFatPointModal } from '../../../actions/ui';
 
 
 export const FatPointItem = ( fat ) => {
@@ -14,6 +18,7 @@ export const FatPointItem = ( fat ) => {
     // Desestructuramos el point para extraer el index, y el resto dejarlo como un objeto
     let { index, ...newFat } = fat;
 
+    // Buscamos el point que le corresponde en el store para extraer información
     const point = points.find( (pt) => (
         pt.id === fat.pointId
     ));
@@ -37,18 +42,35 @@ export const FatPointItem = ( fat ) => {
     }
 
     // Función que usaremos cuando se pinche en el botón KAO
-    const handleKAO = () => {
+    const handleKAO = async () => {
+
+        const { value: text } = await Swal.fire({
+            input: 'textarea',
+            inputLabel: 'Disconformidad',
+            inputPlaceholder: 'Describe la no conformidad ...',
+            inputAttributes: {
+                'aria-label': 'Describle la no conformidad'
+            },
+            showCancelButton: true
+        })
 
         // Creamos una nueva variable con el point, y le añadimos el resultado
         newFat = {
             ...newFat,
             result: "KAO",
-            status: "Checked"
+            status: "Checked",
+            nonConformity: text
         }
 
-        // Hacemos el dispatch de la acción que actualizará el point
-        // Le damos la información del nuevo punto, y el índice de su posición
-        dispatch( fatPointUpdate( newFat, index ) );
+        // // Hacemos el dispatch de la acción que actualizará el point
+        // // Le damos la información del nuevo punto, y el índice de su posición
+        // dispatch( setActiveFatPoint( newFat, index ) );
+
+        // // Hacemos el dispatch para activar el modal
+        // dispatch( uiOpenFatPointModal() );
+
+        // Hacemos el dispatch de la acción que atualizará el point
+        dispatch( fatPointUpdate( newFat, index ));
 
     }
 
@@ -89,6 +111,17 @@ export const FatPointItem = ( fat ) => {
             <div className="col pyd-serials-list">
 
                 <span> { point.description } </span>
+
+            </div>
+            <div className="col pyd-serials-list">
+
+                {
+                    ( fat.result === "KAO" && fat.nonConformity !== null ) // Si hay no conformidad se muestra
+                        ? ( <span> { `Disconformidad: ${ fat.nonConformity }` } </span> )
+                        : ( "" )
+                }
+
+                
 
             </div>
             <div className="row">

@@ -7,6 +7,7 @@ import { Navbar } from '../../ui/Navbar';
 import { FatPointList } from './FatPointList';
 
 import { fatClean, fatFinish, fatPointsLoad, fatStartNew } from '../../../actions/fat';
+import { FatPointModal } from './FatPointModal';
 
 
 export const FatInspectionScreen = () => {
@@ -90,6 +91,8 @@ export const FatInspectionScreen = () => {
                     : ( <div></div> )
 
             }
+
+            {/* <FatPointModal /> */}
 
 
         </div>

@@ -6,6 +6,7 @@ const initialState = {
     modalOpen : false,
     panelModalOpen: false,
     pointModalOpen: false,
+    fatPointModalOpen: false,
 }
 
 
@@ -59,6 +60,22 @@ export const uiReducer = ( state = initialState, action ) => {
             return {
                 ...state,
                 pointModalOpen: false,
+            }
+
+        case types.uiOpenFatPointModal:
+
+            // Establecemos la apertura del modal del fat point en true
+            return {
+                ...state,
+                fatPointModalOpen: true
+            }
+
+        case types.uiCloseFatPointModal:
+
+            // Establecemos la apertura del modal del fat point en false
+            return {
+                ...state,
+                fatPointModalOpen: false
             }
     
         default:

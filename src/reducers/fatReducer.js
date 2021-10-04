@@ -7,8 +7,10 @@ const initialState = {
     starting: true, // Variable para establecer que se está haciendo la consulta en la DB
     checked: false, // Variable para establecer cuando a un cuadro se le hicieron todas las pruebas
     ready: false, // Variable para establecer cuando un cuadro está listo
-    panel: {},
-    points: []
+    panel: {}, // Variable para introducir los datos del cuadro
+    points: [], // Variable para introducir los fat points
+    categories: [], // Variable con las categorías de las pruebas
+    steps: [], // Variable con los steps de las pruebas
 }
 
 // Hacemos la exportación del Reducer
@@ -29,8 +31,12 @@ export const fatReducer = ( state = initialState, action ) => {
             return {
                 starting: true, // Variable para establecer que se está haciendo la consulta en la DB
                 checked: false,
+                ready: false,
                 panel: {},
-                points: []           
+                points: [],
+                active: {},
+                categories: [],
+                steps: [],     
             }    
     
         case types.fatSetActive:
@@ -73,6 +79,31 @@ export const fatReducer = ( state = initialState, action ) => {
                 ...state,
                 checked: action.payload.checked,
                 ready: action.payload.ready,
+            }
+
+        case types.fatLoadCategories:
+
+            return {
+                ...state,
+                categories: action.payload.categories,
+                steps: action.payload.steps,
+            }
+
+        case types.fatSetActivePoint:
+
+            return {
+                ...state,
+                active: {
+                    point: action.payload.point,
+                    index: action.payload.index,
+                }
+            }
+
+        case types.fatClearActivePoint:
+
+            return {
+                ...state,
+                active: {},
             }
         
         default:

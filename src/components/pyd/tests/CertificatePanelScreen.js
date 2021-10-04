@@ -24,21 +24,16 @@ export const CertificatePanelScreen = () => {
     const handleReport = () => {
 
         // En función del estado del panel iremos a una página u otra
-        if ( panel.status === 'tested' || panel.status === 'reviewing' ) {
+        if ( panel.status !== 'pending' ) {
 
             // Si ya está probado, o se está revisando, nos vamos a la página de revisión
             // Cambiamos de página
             history.replace('/tests/certificate/show');
 
-        } else if ( panel.status === 'ready' ) {
-
-            // Si el cuadro ya está listo lo mostrarmos en un mensaje
-            console.log('El cuadro ya está listo');    
-            
         } else {
 
             // Esta parte quiere decir que el cuadro aún no se empezó a probar
-            console.log('El cuadro aún no se ha probado, o se está en proceso');
+            console.log('El cuadro aún no se ha probado');
 
         }
 

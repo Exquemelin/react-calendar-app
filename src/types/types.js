@@ -9,6 +9,8 @@ export const types = {
     uiClosePanelModal: '[ui] Close Panel Modal',
     uiOpenPointModal: '[ui] Open Point Modal',
     uiClosePointModal: '[ui] Close Point Modal',
+    uiOpenFatPointModal: '[ui] Open Fat Point Modal',
+    uiCloseFatPointModal: '[ui] Close Fat Point Modal',
 
     // Interface de eventos y los tipos de acciones
     eventSetActive: '[event] Set Active',
@@ -51,5 +53,8 @@ export const types = {
     fatAddPoint: '[fat] Add Point',
     fatUpdatePoint: '[fat] Update Point',
     fatPanelChecked: '[fat] Panel Checked',
+    fatLoadCategories: '[fat] Load Categories',
+    fatSetActivePoint: '[fat] Set Active Point',
+    fatClearActivePoint: '[fat] Clear Active Point',
 
 }

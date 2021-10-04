@@ -14,6 +14,7 @@ export const ReportPointItem = ( fat ) => {
     // Desestructuramos el point para extraer el index, y el resto dejarlo como un objeto
     let { index, ...newFat } = fat;
 
+    // Buscamos en el store el point correspondiente para extraer la información
     const point = points.find( (pt) => (
         pt.id === fat.pointId
     ));
@@ -89,6 +90,11 @@ export const ReportPointItem = ( fat ) => {
             <div className="col pyd-serials-list">
 
                 <span> { point.description } </span>
+
+            </div>
+            <div className="col pyd-serials-list">
+
+                <span> { fat.nonConformity } </span>
 
             </div>
             {/* <div className="row">
