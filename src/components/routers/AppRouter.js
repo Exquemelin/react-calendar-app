@@ -29,6 +29,7 @@ import { ReportPanelScreen } from '../pyd/tests/ReportPanelScreen';
 import { ReportScreen } from '../pyd/tests/ReportScreen';
 import { CertificatePanelScreen } from '../pyd/tests/CertificatePanelScreen';
 import { CertificateScreen } from '../pyd/tests/CertificateScreen';
+import { ProjectScreen } from '../pyd/project/ProjectScreen';
 
 
 export const AppRouter = () => {
@@ -146,6 +147,13 @@ export const AppRouter = () => {
                         exact
                         path="/tests/certificate/show"
                         component={ CertificateScreen }
+                        isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
+                    />
+
+                    <PrivateRoute 
+                        exact
+                        path="/projects"
+                        component={ ProjectScreen }
                         isLoggedIn={ !!uid } // En este caso si no hay nada, la doble negación nos devolverá false
                     />
 

@@ -663,7 +663,7 @@ export const createReport = ( panel, points ) => {
 }
 
 // Funcion para crear el certificado en pdf
-export const createCertificate = async ( panel, categories ) => {
+export const createCertificate = async ( panel, categories, steps ) => {
 
     // Al lanzar una petición al backend lo hacemos con un try-catch
     try {
@@ -671,7 +671,8 @@ export const createCertificate = async ( panel, categories ) => {
         // Creamos una variable con los datos que vamos a enviar en la petición
         const data = {
             panel,
-            categories
+            categories,
+            steps
         }
         
         // Hacemos la llamada al backend para hacer el certificate en pdf

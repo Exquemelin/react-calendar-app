@@ -27,6 +27,14 @@ export const PYDScreen = () => {
         
     }
 
+    // Definimos la función que lanzaremos cuando se pulse el botón de lanzar proyecto
+    const handleProject = () => {
+
+        // Cambiamos de página
+        history.replace('/projects');
+
+    }
+
     return (
 
         <div>
@@ -46,6 +54,13 @@ export const PYDScreen = () => {
                     onClick={ handleTests }
                 >
                     <h3>Pruebas FAT</h3>
+                </button>
+
+                <button 
+                    className="btn btn-primary pyd-button"
+                    onClick={ handleProject }
+                >
+                    <h3>Lanzar Proyecto</h3>
                 </button>
 
             </div>
