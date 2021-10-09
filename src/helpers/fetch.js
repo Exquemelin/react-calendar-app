@@ -8,8 +8,10 @@ const baseUrl = process.env.REACT_APP_API_URL
 // Información para las fetch hacia ASANA
 // url base
 const asanaUrl = 'https://app.asana.com/api/1.0';
+
+// TODO: ocultar la key de ASANA
 // Autorización
-const authorization = 'Bearer 1/1144573007538297:77cf78dbd4f56ed4ee59021a4e3b6069';
+const authorization = `Bearer ${ASANA_API}`;
 // me
 const me = {
     "gid": "1144573007538297",
